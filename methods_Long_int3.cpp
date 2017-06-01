@@ -587,6 +587,43 @@ Long_int& Long_int::operator -- (int)
 	clean_arr();
 	return *this;
 }
+
+long long Long_int::to_long()
+{
+	long long value = 0LL, maximum = LLONG_MAX;
+	long long pow = 1LL;
+	bool max_value = false;
+	if (len == 19)
+		max_value = true;
+	if (len <= 19)
+	{
+		for (int i = 1; i < len; i++)
+			pow *= 10;
+		for (int i = 0; i < len; i++)
+		{
+			if (max_value)
+			{
+				if (arr[i] <= (maximum - (maximum % pow)) / pow)
+				{
+					if (arr[i] < (maximum - (maximum % pow)) / pow)
+						max_value = false;
+					else
+						maximum -= (maximum - (maximum % pow));
+				}
+				else
+				{
+					value = 0;
+					break;
+				}
+			}
+			value += arr[i] * pow;
+			pow /= 10;
+		}
+		if (negative && value != 0)
+			value *= (-1);
+	}
+	return value; //если возвращает несоответствуюшее результату значение, значит, введённое число не влезло
+}
 //деструктор
 Long_int::~Long_int()
 {
