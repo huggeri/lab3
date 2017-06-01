@@ -1,4 +1,4 @@
-#include "Long_int3.h"
+#include "Long_int2.h"
 
 // описание методов и друзей базового КЛАССА
 unsigned int Long_int::count_objects = 0;
@@ -671,7 +671,7 @@ Unsigned_fractional_number Unsigned_fractional_number::operator / (Unsigned_frac
 	Unsigned_fractional_number temp, copy_val1(*this), copy_val2(val2);
 	copy_val1.magic_with_digits(copy_val2);
 	int pow = 0, sub_pow = 0;
-	if (copy_val1.compare(copy_val2) < 0)//если меньше делимое делителя
+	if (copy_val1.compare(copy_val2) < 0)//если делимое меньше делителя
 	{
 		if (copy_val2.len - copy_val1.len != 0)
 		{
@@ -685,61 +685,39 @@ Unsigned_fractional_number Unsigned_fractional_number::operator / (Unsigned_frac
 		}
 	}
 	temp.Long_int::operator = (copy_val1.Long_int::operator / (copy_val2));; // можно добавить дробный результат
-																			 //if (copy_val1.Long_int::operator != (temp.Long_int::operator * (copy_val2))) // значит есть остаток от деления, который можно поместить в дробную часть
-																			 //{
-																			 //	int i = 1;
-																			 //	while (i < 7)
-																			 //	{
-																			 //		temp.Long_int::operator = (temp.Long_int::operator * (copy_val2));
-																			 //		temp.Long_int::operator = (copy_val1.Long_int::operator - (copy_val2));
-																			 //		temp.Long_int::operator = (temp.Long_int::operator / (copy_val2));
-																			 //		++sub_pow;
-																			 //	}
-																			 //}
-	if (pow != 0) //если первое было меньше второго
+	Unsigned_fractional_number sub_temp, result(temp);
+	temp.pos_point = temp.len;
+	while ((sub_pow < 10) && (copy_val1.Long_int::operator != (result.Long_int::operator * (copy_val2)))) // точность до 10 знаков дробной 
+	{ // части при делении и при наличии ненулевой целой части числа; если нацело не делится
+		sub_temp.Long_int::operator = (result.Long_int::operator * (copy_val2)); //результат деления умножаем на делитель
+		sub_temp.Long_int::operator = (copy_val1.Long_int::operator - (sub_temp)); // делимое минус результат умножения, sub_temp теперь остаток
+		sub_temp.up_size_for_operations(1); //умножаем остаток на 10, 
+		while ((sub_temp.compare(copy_val2) < 0) && (sub_pow < 10)) //если он меньше делителя, записываем 0 и снова умножаем на 10
+		{
+			temp.up_size_for_operations(1);
+			sub_temp.up_size_for_operations(1);
+			++sub_pow;
+		}
+		result.Long_int::operator = (sub_temp.Long_int::operator / (copy_val2)); //записываем в result результат деления
+		copy_val1 = sub_temp;
+		temp.up_size_for_operations(1);
+		temp.arr[temp.len - 1] = result.arr[0]; //записали результат деления в последний разряд объекта - результата метода
+		++sub_pow;
+	}
+	if(pow != 0) //если первое было меньше второго
 	{
 		temp.pos_point = 1;
-		temp.up_size_array(pow); //увеличили и нули записали в старших разрядах
+		temp.up_size_array(pow);
 	}
-	else
-		temp.pos_point = temp.len;//иначе позиция точки результата равна значению по умолчанию (целое получается - пофиксить)
 	return temp;
 }
 
 Unsigned_fractional_number Unsigned_fractional_number::operator + (Unsigned_fractional_number &val2)
 {
 	Unsigned_fractional_number temp, copy_val1 = *this, copy_val2 = val2;
-
 	copy_val1.magic_with_digits(copy_val2);
 	temp.Long_int::operator = (copy_val1.Long_int::operator + (copy_val2));
-
-	if (temp.len < val2.len || temp.len < len)//если нужные нули сократились при вычитании
-	{
-		if (compare_fraction_part(val2) > 0)//сделать если целое, pos_point = len
-		{
-			temp.up_size_array(len - temp.len); // заполняем нулями старшие разряды, сколько необходимо
-			temp.pos_point = pos_point;
-		}
-		else if (compare_fraction_part(val2) < 0)
-		{
-			temp.up_size_array(val2.len - temp.len); // заполняем нулями старшие разряды, сколько необходимо
-			temp.pos_point = val2.pos_point;
-		}
-		else if (val2.len - val2.pos_point != 0 && len - pos_point != 0)//если длина значений была одинакова, но они были меньше 1
-		{
-			temp.up_size_array(len - temp.len);
-			temp.pos_point = pos_point;
-		}
-	}
-	else if (val2.len - val2.pos_point != 0 || len - pos_point != 0) //если была дробная часть
-	{
-		if (compare_fraction_part(val2) >= 0)
-			temp.pos_point = temp.len - (len - pos_point);
-		else
-			temp.pos_point = temp.len - (val2.len - val2.pos_point);
-	}
-	if (val2.len - val2.pos_point == 0 && len - pos_point == 0)
-		temp.pos_point = temp.len;
+	temp.convert_pos_point(*this, val2);
 	return temp;
 }
 
@@ -750,33 +728,7 @@ Unsigned_fractional_number Unsigned_fractional_number::operator - (Unsigned_frac
 	if (copy_val1.compare(val2) >= 0)
 	{
 		temp.Long_int::operator = (copy_val1.Long_int::operator - (copy_val2));
-		if (temp.len < val2.len || temp.len < len)//если нужные нули сократились при вычитании
-		{
-			if (compare_fraction_part(val2) > 0)//сделать если целое, pos_point = len
-			{
-				temp.up_size_array(len - temp.len); // заполняем нулями старшие разряды, сколько необходимо
-				temp.pos_point = pos_point;
-			}
-			else if (compare_fraction_part(val2) < 0)
-			{
-				temp.up_size_array(val2.len - temp.len); // заполняем нулями старшие разряды, сколько необходимо
-				temp.pos_point = val2.pos_point;
-			}
-			else if (val2.len - val2.pos_point != 0 && len - pos_point != 0)//если длина значений была одинакова, но они были меньше 1
-			{
-				temp.up_size_array(len - temp.len);
-				temp.pos_point = pos_point;
-			}
-		}
-		else if (val2.len - val2.pos_point != 0 || len - pos_point != 0) //если была дробная часть
-		{
-			if (compare_fraction_part(val2) >= 0)
-				temp.pos_point = temp.len - (len - pos_point);
-			else
-				temp.pos_point = temp.len - (val2.len - val2.pos_point);
-		}
-		if (val2.len - val2.pos_point == 0 && len - pos_point == 0)
-			temp.pos_point = temp.len;
+		temp.convert_pos_point(*this, val2);
 	}
 	else // если получится отрицательный
 	{
@@ -869,6 +821,37 @@ void Unsigned_fractional_number::magic_with_digits(Unsigned_fractional_number &v
 	}
 }
 
+void Unsigned_fractional_number::convert_pos_point(Unsigned_fractional_number &val1, const Unsigned_fractional_number &val2) //вызываем для того объекта, который меняется
+{
+	if (len < val2.len || len < val1.len)//если нужные нули сократились при вычитании
+	{
+		if (val1.compare_fraction_part(val2) > 0)//сделать если целое, pos_point = len
+		{
+			up_size_array(val1.len - len); // заполняем нулями старшие разряды, сколько необходимо
+			pos_point = val1.pos_point;
+		}
+		else if (val1.compare_fraction_part(val2) < 0)
+		{
+			up_size_array(val2.len - len); // заполняем нулями старшие разряды, сколько необходимо
+			pos_point = val2.pos_point;
+		}
+		else if (val2.len - val2.pos_point != 0 && val1.len - val1.pos_point != 0)//если длина значений была одинакова, но они были меньше 1
+		{
+			up_size_array(val1.len - len);
+			pos_point = val1.pos_point;
+		}
+	}
+	else if (val2.len - val2.pos_point != 0 || val1.len - val1.pos_point != 0) //если была дробная часть
+	{
+		if (val1.compare_fraction_part(val2) >= 0)
+			pos_point = len - (val1.len - val1.pos_point);
+		else
+			pos_point = len - (val2.len - val2.pos_point);
+	}
+	if (val2.len - val2.pos_point == 0 && val1.len - val1.pos_point == 0)
+		pos_point = len;
+}
+
 Unsigned_fractional_number::~Unsigned_fractional_number()
 {
 	/*	delete[] fraction_part;*/
@@ -936,35 +919,8 @@ Signed_fractional_number Signed_fractional_number::operator - (Signed_fractional
 { // некоторых случая получается 0, когда здесь получается отрицатльное значение
 	Signed_fractional_number temp, copy_val1 = *this, copy_val2 = val2;
 	copy_val1.magic_with_digits(copy_val2);
-
 	temp.Long_int::operator = (copy_val1.Long_int::operator - (copy_val2));
-	if (temp.len < val2.len || temp.len < len)//если нужные нули сократились при вычитании
-	{
-		if (compare_fraction_part(val2) > 0)//сделать если целое, pos_point = len
-		{
-			temp.up_size_array(len - temp.len); // заполняем нулями старшие разряды, сколько необходимо
-			temp.pos_point = pos_point;
-		}
-		else if (compare_fraction_part(val2) < 0)
-		{
-			temp.up_size_array(val2.len - temp.len); // заполняем нулями старшие разряды, сколько необходимо
-			temp.pos_point = val2.pos_point;
-		}
-		else if (val2.len - val2.pos_point != 0 && len - pos_point != 0)//если длина значений была одинакова, но они были меньше 1
-		{
-			temp.up_size_array(len - temp.len);
-			temp.pos_point = pos_point;
-		}
-	}
-	else if (val2.len - val2.pos_point != 0 || len - pos_point != 0) //если была дробная часть
-	{
-		if (compare_fraction_part(val2) >= 0)
-			temp.pos_point = temp.len - (len - pos_point);
-		else
-			temp.pos_point = temp.len - (val2.len - val2.pos_point);
-	}
-	if (val2.len - val2.pos_point == 0 && len - pos_point == 0)
-		temp.pos_point = temp.len;
+	temp.convert_pos_point(*this, val2);
 	return temp;
 }
 
