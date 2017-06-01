@@ -1,5 +1,4 @@
 //(интерфейс)
-//(интерфейс)
 #include "Long_int2.h"
 
 char *menu_action(int key)
