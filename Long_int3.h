@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <climits>
 
 using namespace std;
 
@@ -41,6 +42,7 @@ public:
 	const char* get_symbol();
 	int get_length();
 	int get_digit(int index);
+	long long to_long();
 	static unsigned int get_count_objects();
 	~Long_int(); //деструктор
 };
