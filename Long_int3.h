@@ -47,13 +47,14 @@ public:
 
 class Unsigned_fractional_number : public Long_int
 {
+	void up_size_for_operations(int pow);//добавление нулей в младшие разряды (в отличии от Up_size_array)
+	int compare_fraction_part(const Unsigned_fractional_number &val2);//сравнение длин дробных частей
 protected:
 	int pos_point; // класс хранит позицию точки
 	//int *fraction_part;
-	int clean_string_and_char_to_int_with_dot(char buff[]);//для воода
-	void up_size_for_operations(int pow);//добавление нулей в младшие разряды (в отличии от Up_size_array)
-	void magic_with_digits(Unsigned_fractional_number &val2);//добавление младших разрядов по необходимости (после точки) для корректного оперирования
-	int compare_fraction_part(const Unsigned_fractional_number &val2);//сравнение длин дробных частей
+	void magic_with_digits(Unsigned_fractional_number &val2);//добавление младших разрядов по необходимости (после точки) для корректного оперирования значениями
+	int clean_string_and_char_to_int_with_dot(char buff[]);//для ввода
+	void convert_pos_point(Unsigned_fractional_number &val1, const Unsigned_fractional_number &val2); // преобразование позиции точки
 public:
 	Unsigned_fractional_number();
 	Unsigned_fractional_number(const Unsigned_fractional_number &object);
