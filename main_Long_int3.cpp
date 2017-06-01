@@ -78,9 +78,9 @@ void main()
 	{
 		int menu_key = 0;
 		cout << menu(1) << endl;
-		Signed_fractional_number val1;
-		Signed_fractional_number val2;
-		Signed_fractional_number result;
+		Long_int val1;
+		Long_int val2;
+		Long_int result;
 		cin >> val1;
 		cin >> val2;
 		cout << menu(2) << endl;
@@ -93,6 +93,7 @@ void main()
 			result = val1 * val2;
 			cout << val1 << menu_action(menu_key) << val2 << menu_action(5) << result << "\t";
 			cout << menu(4) << Long_int::get_count_objects() << endl;
+			cout << "long long type: " << result.to_long() << endl;
 			break;
 		}
 		case 2://деление
@@ -100,6 +101,7 @@ void main()
 			result = val1 / val2;
 			cout << val1 << menu_action(menu_key) << val2 << menu_action(5) << result << "\t";
 			cout << menu(4) << Long_int::get_count_objects() << endl;
+			cout << "long long type: " << result.to_long() << endl;
 			break;
 		}
 		case 3://сложение
@@ -107,6 +109,7 @@ void main()
 			result = val1 + val2;
 			cout << val1 << menu_action(menu_key) << val2 << menu_action(5) << result << "\t";
 			cout << menu(4) << Long_int::get_count_objects() << endl;
+			cout << "long long type: " << result.to_long() << endl;
 			break;
 		}
 		case 4://вычитание
@@ -114,6 +117,7 @@ void main()
 			result = val1 - val2;
 			cout << val1 << menu_action(menu_key) << val2 << menu_action(5) << result << "\t";
 			cout << menu(4) << Long_int::get_count_objects() << endl;
+			cout << "long long type: " << result.to_long() << endl;
 			break;
 		}
 		case 5://вывод цифры
