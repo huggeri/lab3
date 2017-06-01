@@ -1,5 +1,6 @@
 //(интерфейс)
-#include "Long_int3.h"
+//(интерфейс)
+#include "Long_int2.h"
 
 char *menu_action(int key)
 {
@@ -78,9 +79,9 @@ void main()
 	{
 		int menu_key = 0;
 		cout << menu(1) << endl;
-		Unsigned_fractional_number val1;
-		Unsigned_fractional_number val2;
-		Unsigned_fractional_number result;
+		Signed_fractional_number val1;
+		Signed_fractional_number val2;
+		Signed_fractional_number result;
 		cin >> val1;
 		cin >> val2;
 		cout << menu(2) << endl;
