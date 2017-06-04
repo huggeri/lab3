@@ -71,6 +71,8 @@ char *menu(int key)
 }
 
 void main()
+//создаётся исключение для беззнакового типа: если введён минус - ошибка. Заново всё делать.
+// описание - во friend-функци класса
 {
 	bool flag = true;
 
@@ -78,9 +80,27 @@ void main()
 	{
 		int menu_key = 0;
 		cout << menu(1) << endl;
-		Long_int val1;
-		Long_int val2;
-		Long_int result;
+		Unsigned_fractional_number val1;
+		Unsigned_fractional_number val2;
+		Unsigned_fractional_number result;
+		try
+		{
+			cin >> val1;
+		}
+		catch (const std::exception &e)
+		{
+			cerr << e.what();
+			break;
+		}
+		try
+		{
+			cin >> val2;
+		}
+		catch (const std::exception &e)
+		{
+			cerr << e.what();
+			break;
+		}
 		cin >> val1;
 		cin >> val2;
 		cout << menu(2) << endl;
