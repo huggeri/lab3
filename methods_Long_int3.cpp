@@ -401,7 +401,7 @@ unsigned int Long_int::get_count_objects()
 	return count_objects;
 }
 //показывает, есть ли нулевые значения
-bool Long_int::null(Long_int val2)
+bool Long_int::null(Long_int &val2)
 {
 	return (len == 1 && arr[0] == 0) || (val2.len == 1 && val2.arr[0] == 0);
 }
@@ -680,8 +680,6 @@ Unsigned_fractional_number::Unsigned_fractional_number(const Unsigned_fractional
 			reduce_size_array(len - object.len);
 	}
 	copyr(arr, len, object.arr, object.len);
-	//fraction_part = new int[object.len - object.pos_point];// копирование дробной части
-	//for(int i = 0; i object.len - object.pos_point)
 	pos_point = object.pos_point;
 	negative = object.negative;
 } // контср. копирования
@@ -891,7 +889,6 @@ void Unsigned_fractional_number::convert_pos_point(Unsigned_fractional_number &v
 
 Unsigned_fractional_number::~Unsigned_fractional_number()
 {
-	/*	delete[] fraction_part;*/
 }
 
 istream & operator >> (istream &in, Unsigned_fractional_number &object)
@@ -902,8 +899,9 @@ istream & operator >> (istream &in, Unsigned_fractional_number &object)
 	object.pos_point = object.clean_string_and_char_to_int_with_dot(buff); // обработка значения, вернулась позиция точки
 	if (object.negative)
 	{
-		Unsigned_fractional_number temp;
-		object = temp;
+		//Unsigned_fractional_number temp;
+		//object = temp;
+		throw std::exception("Wrong format!\n");
 	}
 	return in;
 }
