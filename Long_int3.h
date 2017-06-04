@@ -12,8 +12,9 @@ class Long_int
 {
 	static unsigned int count_objects; //статическая переменная, считающа количество созданных за всю работу программы объектов
 	void work_with_symbols(Long_int &val2, int key, int &change_symbol);
-	bool null(Long_int val2);
+	bool null(Long_int &val2);
 	void clean_arr();
+	void clean_string_and_char_to_int(char buff[]);
 protected:
 	bool negative; //знак числа
 	int len;
@@ -22,7 +23,6 @@ protected:
 	int compare(const Long_int &val2);//сравнение
 	void up_size_array(int length);
 	void reduce_size_array(int length);
-	void clean_string_and_char_to_int(char buff[]);
 public:
 	Long_int();
 	Long_int(const Long_int &object); // конструктор копирования
@@ -53,7 +53,6 @@ class Unsigned_fractional_number : public Long_int
 	int compare_fraction_part(const Unsigned_fractional_number &val2);//сравнение длин дробных частей
 protected:
 	int pos_point; // класс хранит позицию точки
-	//int *fraction_part;
 	void magic_with_digits(Unsigned_fractional_number &val2);//добавление младших разрядов по необходимости (после точки) для корректного оперирования значениями
 	int clean_string_and_char_to_int_with_dot(char buff[]);//для ввода
 	void convert_pos_point(Unsigned_fractional_number &val1, const Unsigned_fractional_number &val2); // преобразование позиции точки
